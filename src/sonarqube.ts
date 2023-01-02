@@ -122,8 +122,8 @@ export default class Sonarqube {
     }
   }
 
-  public getScannerCommand = () =>
-    `sonar-scanner -Dsonar.projectKey=${
+  public getScannerCommand = () => {
+    return `sonar-scanner -Dsonar.projectKey=${
       this.project.projectKey
     } -Dsonar.projectName=${
       this.project.projectName
@@ -134,6 +134,7 @@ export default class Sonarqube {
         ? `-Dsonar.eslint.reportPaths=${this.project.lintReport}`
         : ''
     }`
+  }
 
   public getStatus = async (): Promise<ProjectStatus | null> => {
     const response = await this.http.get<ProjectStatusResponseAPI>(

@@ -10730,7 +10730,7 @@ const generateSummary = (status, url) => {
     const conditions = status.conditions.reduce((acc, current) => {
         switch (current.metricKey) {
             case 'reliability_rating':
-                return `${acc}Reability ${current.status === 'ERROR' ? ':x:' : ':white_check_mark:'} \n`;
+                return `${acc}Reliability ${current.status === 'ERROR' ? ':x:' : ':white_check_mark:'} \n`;
             case 'security_rating':
                 return `${acc}Security ${current.status === 'ERROR' ? ':x:' : ':white_check_mark:'} \n`;
             case 'sqale_rating':
@@ -10827,9 +10827,11 @@ class Sonarqube {
                 throw new Error('Error getting project issues from SonarQube. Please make sure you provided the host and token inputs.');
             }
         };
-        this.getScannerCommand = () => `sonar-scanner -Dsonar.projectKey=${this.project.projectKey} -Dsonar.projectName=${this.project.projectName} -Dsonar.sources=. -Dsonar.projectBaseDir=${this.project.projectBaseDir} -Dsonar.login=${this.token} -Dsonar.host.url=${this.host} ${this.project.lintReport
-            ? `-Dsonar.eslint.reportPaths=${this.project.lintReport}`
-            : ''}`;
+        this.getScannerCommand = () => {
+            return `sonar-scanner -Dsonar.projectKey=${this.project.projectKey} -Dsonar.projectName=${this.project.projectName} -Dsonar.sources=. -Dsonar.projectBaseDir=${this.project.projectBaseDir} -Dsonar.login=${this.token} -Dsonar.host.url=${this.host} ${this.project.lintReport
+                ? `-Dsonar.eslint.reportPaths=${this.project.lintReport}`
+                : ''}`;
+        };
         this.getStatus = async () => {
             const response = await this.http.get(`/api/qualitygates/project_status?projectKey=${this.project.projectKey}`);
             if (response.status !== 200 || !response.data) {
